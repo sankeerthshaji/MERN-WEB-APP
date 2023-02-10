@@ -8,7 +8,7 @@ const {
 const multer = require("multer");
 const { storage } = require("../cloudinary");
 const upload = multer({ storage });
-const requireAuth = require("../middleware/requireAuth");
+const requireAuthUser = require("../middleware/requireAuthUser");
 
 const router = express.Router();
 
@@ -16,8 +16,8 @@ router.post("/login", loginUser);
 
 router.post("/signup", signupUser);
 
-router.post("/editProfile", requireAuth, upload.single("image"), editProfile);
+router.post("/editProfile", requireAuthUser, upload.single("image"), editProfile);
 
-router.post("/profile", requireAuth, getUserDetails);
+router.post("/profile", requireAuthUser, getUserDetails);
 
 module.exports = router;

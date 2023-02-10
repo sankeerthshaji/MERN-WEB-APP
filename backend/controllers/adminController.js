@@ -10,10 +10,10 @@ const createToken = (_id) => {
 const loginAdmin = async (req, res) => {
   const { email, password } = req.body; //destructuring req.body
   try {
-    const user = await Admin.login(email, password); //login user
+    const admin = await Admin.login(email, password); //login user
 
     //create token
-    const token = createToken(user._id);
+    const token = createToken(admin._id);
 
     res.status(200).json({ email, token }); //send token
   } catch (error) {

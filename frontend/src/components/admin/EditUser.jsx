@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import React, { useState, useEffect } from "react";
 import { Col, Button, Row, Container, Card, Form } from "react-bootstrap";
 import { Alert } from "react-bootstrap";
+import { useSelector } from "react-redux";
 
 const ErrorAlert = ({ error }) => {
   return (
@@ -13,6 +14,7 @@ const ErrorAlert = ({ error }) => {
 };
 
 function EditUser() {
+  const admin = useSelector((state) => state.admin);
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const userId = queryParams.get("userId");
@@ -25,7 +27,11 @@ function EditUser() {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const response = await axios.get(`/admin/users/${userId}`);
+        const response = await axios.get(`/admin/users/${userId}`, {
+          headers: {
+            Authorization: `Bearer ${admin.token}`,
+          },
+        });
         console.log(response.data.user.email);
         setEmail(response.data.user.email);
       } catch (err) {
@@ -43,7 +49,10 @@ function EditUser() {
         email,
       });
       console.log(response);
-      localStorage.setItem("user", JSON.stringify({ ...JSON.parse(localStorage.getItem("user")), email }));
+      localStorage.setItem(
+        "user",
+        JSON.stringify({ ...JSON.parse(localStorage.getItem("user")), email })
+      );
       navigate("/admin");
     } catch (err) {
       console.log(err.response.data.error);

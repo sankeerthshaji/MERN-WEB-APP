@@ -5,8 +5,10 @@ import Container from "react-bootstrap/Container";
 import Button from "react-bootstrap/Button";
 import useLogout from "../../hooks/user/useLogout";
 import Table from "react-bootstrap/Table";
+import { useSelector } from "react-redux";
 
 function Body() {
+  const admin = useSelector((state) => state.admin);
   const [users, setUsers] = useState([]);
   const [filteredUsers, setFilteredUsers] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
@@ -14,7 +16,11 @@ function Body() {
 
   const fetchUsers = async () => {
     try {
-      const response = await axios.get("/admin/users");
+      const response = await axios.get("/admin/users", {
+        headers: {
+          Authorization: `Bearer ${admin.token}`,
+        },
+      });
       console.log(response.data.users);
       setUsers(response.data.users);
     } catch (err) {
@@ -34,7 +40,11 @@ function Body() {
       return;
     }
     try {
-      const response = await axios.delete(`/admin/users/${user._id}`);
+      const response = await axios.delete(`/admin/users/${user._id}`, {
+        headers: {
+          Authorization: `Bearer ${admin.token}`,
+        },
+      });
       console.log(response);
       fetchUsers();
       logout();
@@ -94,7 +104,8 @@ function Body() {
               <th className="text-center">Delete</th>
             </tr>
           </thead>
-          {(filteredUsers.length === 0 && searchTerm !== "") || users.length === 0 ? (
+          {(filteredUsers.length === 0 && searchTerm !== "") ||
+          users.length === 0 ? (
             <tbody>
               <tr>
                 <td colSpan="4" className="text-center">

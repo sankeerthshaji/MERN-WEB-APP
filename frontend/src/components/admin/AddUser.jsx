@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import React, { useState } from "react";
 import { Col, Button, Row, Container, Card, Form } from "react-bootstrap";
 import { Alert } from "react-bootstrap";
+import { useSelector } from "react-redux";
 
 const ErrorAlert = ({ error }) => {
   return (
@@ -13,6 +14,7 @@ const ErrorAlert = ({ error }) => {
 };
 
 function AddUser() {
+  const admin = useSelector((state) => state.admin);
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -24,7 +26,15 @@ function AddUser() {
     setError("");
     setIsLoading(true);
     try {
-      const response = await axios.post("/admin/addUser", { email, password });
+      const response = await axios.post(
+        "/admin/addUser",
+        { email, password },
+        {
+          headers: {
+            Authorization: `Bearer ${admin.token}`,
+          },
+        }
+      );
       console.log(response);
       navigate("/admin");
     } catch (err) {
