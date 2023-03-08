@@ -41,6 +41,7 @@ function EditProfile() {
       .post("/editProfile", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
+          "Authorization": `Bearer ${user.token}`
         },
       })
       .then((res) => {
